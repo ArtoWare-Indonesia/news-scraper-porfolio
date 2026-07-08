@@ -7,8 +7,7 @@ from utils.logger import setup_logger
 def main():
     scraper = RSSScraper()
     exporter = Exporter()
-    logger = setup_logger() 
-
+    logger = setup_logger()
 
     all_articles = []
 
@@ -28,16 +27,19 @@ def main():
             logger.error(f"Error scraping {source_name}: {e}")
 
     if all_articles:
-        exporter.to_csv(all_articles)
-        exporter.to_excel(all_articles)
-        exporter.to_json(all_articles)
+        csv_file = exporter.to_csv(all_articles)
+        excel_file = exporter.to_excel(all_articles)
+        json_file = exporter.to_json(all_articles)
 
-        logger.info("\nScraping completed successfully!")
+        logger.info("")
+        logger.info("Scraping completed successfully!")
         logger.info(f"Total articles: {len(all_articles)}")
-        logger.info("Files saved in output/ folder")
+        logger.info(f"CSV   : {csv_file}")
+        logger.info(f"Excel : {excel_file}")
+        logger.info(f"JSON  : {json_file}")
 
     else:
-        logger.error("\nNo articles found.")
+        logger.error("No articles found.")
 
 
 if __name__ == "__main__":
