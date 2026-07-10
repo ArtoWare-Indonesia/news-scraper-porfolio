@@ -1,5 +1,6 @@
 from urllib.parse import urljoin
 
+from models import NewsItem
 from .base import BaseScraper
 
 
@@ -36,14 +37,20 @@ class TempoScraper(BaseScraper):
             image = ""
 
             if img:
-                image = img.get("src", "")
+                image = (
+                    img.get("src")
+                    or img.get("data-src")
+                    or ""
+                )
 
-            articles.append({
-                "title": title,
-                "url": url,
-                "image": image,
-                "source": "Tempo",
-            })
+            item = NewsItem(
+                title=title,
+                url=url,
+                source="Tempo",
+                image=image,
+            )
+
+            articles.append(item.to_dict())
 
         self.logger.info(f"Parsed {len(articles)} articles")
 
