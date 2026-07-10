@@ -16,3 +16,14 @@ RSS_SOURCES = [
         "url": "https://rss.tempo.co/nasional",
     },
 ]
+
+HTML_SOURCES = [
+    {
+        "name": "Antara",
+        "url": "https://www.antaranews.com/"
+    },
+    {
+        "name": "Tempo",
+        "url": "https://tempo.co/"
+    }
+]
