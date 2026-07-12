@@ -65,6 +65,9 @@ class AntaraScraper(BaseScraper):
                 summary=summary,
             )
 
+            if not self.is_valid_url(url):
+                continue
+            
             articles.append(item.to_dict())
 
         self.logger.info(f"Parsed {len(articles)} articles")

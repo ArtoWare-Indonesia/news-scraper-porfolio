@@ -33,6 +33,9 @@ class TempoScraper(BaseScraper):
                 link.get("href", "")
             )
 
+            if not self.is_valid_url(url):
+                continue
+
             img = card.select_one("img")
             image = ""
 
@@ -50,6 +53,8 @@ class TempoScraper(BaseScraper):
                 image=image,
             )
 
+            
+          
             articles.append(item.to_dict())
 
         self.logger.info(f"Parsed {len(articles)} articles")

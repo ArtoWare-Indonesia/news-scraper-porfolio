@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import logging
+from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -68,18 +69,135 @@ class BaseScraper(ABC):
         return response.text
 
     def get_soup(self, url=None):
-        """Mengembalikan BeautifulSoup."""
+        """Mengembalikan objek BeautifulSoup."""
 
         html = self.fetch(url)
         return BeautifulSoup(html, "html.parser")
 
+    def is_valid_url(self, url):
+        """
+        Memvalidasi URL artikel.
+
+        Mengembalikan True jika URL valid,
+        False jika kosong atau bukan URL HTTP/HTTPS.
+        """
+
+        if not url:
+            return False
+
+        url = url.strip()
+
+        if not url:
+            return False
+
+        if url.startswith("#"):
+            return False
+
+        if url.startswith("javascript:"):
+            return False
+
+        parsed = urlparse(url)
+
+        return (
+            parsed.scheme in ("http", "https")
+            and bool(parsed.netloc)
+        )
+
+    def remove_duplicates(self, articles):
+        """
+        Menghapus artikel duplikat berdasarkan URL.
+        """
+
+        unique_articles = []
+        seen_urls = set()
+
+        for article in articles:
+            url = article.get("url", "").strip()
+
+            if not url:
+                continue
+
+            if url in seen_urls:
+                continue
+
+            seen_urls.add(url)
+            unique_articles.append(article)
+
+        removed = len(articles) - len(unique_articles)
+
+        if removed > 0:
+            self.logger.info(
+                f"Removed {removed} duplicate articles"
+            )
+
+        return unique_articles
+
+    def clean_text(self, text):
+        """
+        Membersihkan teks hasil scraping.
+        """
+
+        if text is None:
+            return ""
+
+        text = str(text)
+
+        text = (
+            text.replace("\n", " ")
+                .replace("\r", " ")
+                .replace("\t", " ")
+        )
+
+        text = " ".join(text.split())
+
+        return text.strip()
+
+    def clean_article(self, article):
+        """
+        Membersihkan seluruh field artikel.
+        """
+
+        cleaned = {}
+
+        for key, value in article.items():
+            cleaned[key] = self.clean_text(value)
+
+        return cleaned
+
+    def clean_articles(self, articles):
+        """
+        Membersihkan semua artikel.
+        """
+
+        cleaned_articles = [
+            self.clean_article(article)
+            for article in articles
+        ]
+
+        self.logger.info(
+            f"Cleaned {len(cleaned_articles)} articles"
+        )
+
+        return cleaned_articles
+
     def scrape(self):
         """Workflow standar semua scraper."""
 
+        self.logger.info(f"Running {self.__class__.__name__}")
+
         soup = self.get_soup()
-        return self.parse(soup)
+
+        articles = self.parse(soup)
+
+        articles = self.remove_duplicates(articles)
+
+        articles = self.clean_articles(articles)
+
+        self.logger.info(f"Collected {len(articles)} articles")
+
+        return articles
 
     @abstractmethod
     def parse(self, soup):
-        """Harus diimplementasikan oleh subclass."""
+        """Harus diimplementasikan oleh setiap scraper."""
         pass
