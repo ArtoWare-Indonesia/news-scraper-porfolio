@@ -1,23 +1,26 @@
 from urllib.parse import urljoin
 
 from models import NewsItem
-from .base import BaseScraper
+from scrapers.base import BaseScraper
 
 
 class TempoScraper(BaseScraper):
+    """HTML scraper untuk Tempo."""
 
     BASE_URL = "https://www.tempo.co"
-    START_URL = "https://www.tempo.co"
 
-    def __init__(self):
-        super().__init__(self.START_URL)
+    def __init__(self, source):
+        super().__init__(source)
 
     def parse(self, soup):
         articles = []
 
         cards = soup.select("figure.contents")
 
-        self.logger.info(f"Found {len(cards)} article cards")
+        self.logger.info(
+            "Found %d article cards",
+            len(cards)
+        )
 
         for card in cards:
 
@@ -49,14 +52,15 @@ class TempoScraper(BaseScraper):
             item = NewsItem(
                 title=title,
                 url=url,
-                source="Tempo",
+                source=self.source["name"],
                 image=image,
             )
 
-            
-          
             articles.append(item.to_dict())
 
-        self.logger.info(f"Parsed {len(articles)} articles")
+        self.logger.info(
+            "Parsed %d articles",
+            len(articles)
+        )
 
         return articles

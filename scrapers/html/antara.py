@@ -1,23 +1,26 @@
 from urllib.parse import urljoin
 
 from models import NewsItem
-from .base import BaseScraper
+from scrapers.base import BaseScraper
 
 
 class AntaraScraper(BaseScraper):
+    """HTML scraper untuk Antara News."""
 
     BASE_URL = "https://www.antaranews.com"
-    START_URL = "https://www.antaranews.com/terkini"
-
-    def __init__(self):
-        super().__init__(self.START_URL)
+  
+    def __init__(self, source):
+        super().__init__(source)
 
     def parse(self, soup):
         articles = []
 
         cards = soup.select("div.card__post__body")
 
-        self.logger.info(f"Found {len(cards)} article cards")
+        self.logger.info(
+            "Found %d article cards",
+            len(cards)
+        )
 
         for card in cards:
 
@@ -56,20 +59,23 @@ class AntaraScraper(BaseScraper):
                 else ""
             )
 
+            if not self.is_valid_url(url):
+                continue
+
             item = NewsItem(
                 title=title,
                 url=url,
-                source="Antara",
+                source=self.source["name"],
                 category=category,
                 published=published,
                 summary=summary,
             )
 
-            if not self.is_valid_url(url):
-                continue
-            
             articles.append(item.to_dict())
 
-        self.logger.info(f"Parsed {len(articles)} articles")
+        self.logger.info(
+            "Parsed %d articles",
+            len(articles)
+        )
 
         return articles

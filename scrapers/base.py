@@ -9,11 +9,26 @@ from urllib3.util.retry import Retry
 
 
 class BaseScraper(ABC):
-    """Base class untuk semua HTML scraper."""
+    """Base class untuk semua scraper."""
 
-    def __init__(self, start_url):
-        self.start_url = start_url
-        self.logger = logging.getLogger(self.__class__.__name__)
+    def __init__(self, source):
+        """
+        Parameters
+        ----------
+        source : dict
+            Contoh:
+            {
+                "name": "Antara",
+                "url": "https://www.antaranews.com/"
+            }
+        """
+        self.source = source
+        self.start_url = source["url"]
+
+        self.logger = logging.getLogger(
+            self.__class__.__name__
+        )
+
         self.session = self._create_session()
 
     def _create_session(self):
@@ -57,7 +72,10 @@ class BaseScraper(ABC):
 
         target = url or self.start_url
 
-        self.logger.info(f"Fetching: {target}")
+        self.logger.info(
+            "Fetching: %s",
+            target
+        )
 
         response = self.session.get(
             target,
@@ -77,9 +95,6 @@ class BaseScraper(ABC):
     def is_valid_url(self, url):
         """
         Memvalidasi URL artikel.
-
-        Mengembalikan True jika URL valid,
-        False jika kosong atau bukan URL HTTP/HTTPS.
         """
 
         if not url:
@@ -127,7 +142,8 @@ class BaseScraper(ABC):
 
         if removed > 0:
             self.logger.info(
-                f"Removed {removed} duplicate articles"
+                "Removed %d duplicate articles",
+                removed
             )
 
         return unique_articles
@@ -175,16 +191,16 @@ class BaseScraper(ABC):
         ]
 
         self.logger.info(
-            f"Cleaned {len(cleaned_articles)} articles"
+            "Cleaned %d articles",
+            len(cleaned_articles)
         )
 
         return cleaned_articles
 
     def scrape(self):
-        """Workflow standar semua scraper."""
-
-        self.logger.info(f"Running {self.__class__.__name__}")
-
+        """
+        Workflow standar untuk HTML scraper.
+        """
         soup = self.get_soup()
 
         articles = self.parse(soup)
@@ -193,11 +209,14 @@ class BaseScraper(ABC):
 
         articles = self.clean_articles(articles)
 
-        self.logger.info(f"Collected {len(articles)} articles")
+        self.logger.info(
+            "Collected %d articles",
+            len(articles)
+        )
 
         return articles
 
     @abstractmethod
     def parse(self, soup):
-        """Harus diimplementasikan oleh setiap scraper."""
+        """Harus diimplementasikan oleh setiap HTML scraper."""
         pass

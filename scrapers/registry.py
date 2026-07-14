@@ -1,11 +1,7 @@
 from scrapers.html.antara import AntaraScraper
 from scrapers.html.tempo import TempoScraper
 
-SCRAPERS = [
-    AntaraScraper,
-    TempoScraper,
-]
-
-__all__ = [
-    "SCRAPERS",
-]
+HTML_SCRAPERS = {
+    "Antara": AntaraScraper,
+    "Tempo": TempoScraper,
+}
