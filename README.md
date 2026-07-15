@@ -157,7 +157,9 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 ```
+## 💻 Running the Project
 
+![Terminal Demo](docs/images/terminal-demo.png)
 ---
 
 ## Usage
