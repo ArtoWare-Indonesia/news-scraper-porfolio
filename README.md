@@ -99,7 +99,16 @@ news-scraper-porfolio/
 │   ├── exporter.py
 │   └── logger.py
 │
+├── docs/
+│   └── images/
+│       ├── output-csv.png
+│       ├── output-excel.png
+│       └── output-json.png
+│
 ├── output/
+│   ├── news.csv
+│   ├── news.xlsx
+│   └── news.json
 │
 ├── test_antara.py
 ├── test_tempo.py
@@ -173,7 +182,16 @@ Total articles: 108
 
 Files saved in output/
 ```
+## 📸 Output Preview
 
+### CSV Output
+![CSV Output](docs/images/output-csv.png)
+
+### Excel Output
+![Excel Output](docs/images/output-excel.png)
+
+### JSON Output
+![JSON Output](docs/images/output-json.png)
 ---
 
 ## Output
