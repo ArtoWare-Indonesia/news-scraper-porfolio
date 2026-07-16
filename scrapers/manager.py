@@ -1,4 +1,5 @@
 import logging
+import time
 
 from config import HTML_SOURCES, RSS_SOURCES
 from scrapers.registry import HTML_SCRAPERS
@@ -18,9 +19,7 @@ class ScraperManager:
             if not source.get("enabled", True):
                 continue
 
-            scraper_class = HTML_SCRAPERS.get(
-                source["name"]
-            )
+            scraper_class = HTML_SCRAPERS.get(source["name"])
 
             if scraper_class is None:
                 continue
@@ -82,8 +81,7 @@ class ScraperManager:
             scrapers = [
                 scraper
                 for scraper in scrapers
-                if scraper.source["name"].lower()
-                in selected
+                if scraper.source["name"].lower() in selected
             ]
 
         if not scrapers:
@@ -107,37 +105,43 @@ class ScraperManager:
             logger.info(
                 "Running %s (%s)",
                 scraper.__class__.__name__,
-                source_name
+                source_name,
             )
 
-            try:
+            scraper_start = time.perf_counter()
 
+            try:
                 articles = scraper.scrape()
                 count = len(articles)
 
                 source_counts[source_name] = count
-
-                logger.info(
-                    "%s collected %d article(s)",
-                    source_name,
-                    count
-                )
-
                 all_articles.extend(articles)
 
+                elapsed = time.perf_counter() - scraper_start
+
+                logger.info(
+                    "[SUCCESS] %s collected %d article(s) in %.2f seconds",
+                    source_name,
+                    count,
+                    elapsed,
+                )
+
             except Exception:
+
+                elapsed = time.perf_counter() - scraper_start
 
                 source_counts[source_name] = 0
                 failed_sources.append(source_name)
 
                 logger.exception(
-                    "Failed running %s",
-                    source_name
+                    "[FAILED] %s failed after %.2f seconds",
+                    source_name,
+                    elapsed,
                 )
 
         logger.info(
             "Finished. Total articles collected: %d",
-            len(all_articles)
+            len(all_articles),
         )
 
         return (

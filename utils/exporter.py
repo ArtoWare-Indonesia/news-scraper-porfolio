@@ -30,7 +30,7 @@ class Exporter:
         """Export articles to CSV."""
 
         if not articles:
-            return
+            return None
 
         if filename is None:
             filename = f"news_{self.timestamp}.csv"
@@ -55,8 +55,13 @@ class Exporter:
             for article in articles:
                 writer.writerow(article)
 
+        return filepath
+
     def export_json(self, articles, filename=None):
         """Export articles to JSON."""
+
+        if not articles:
+            return None
 
         if filename is None:
             filename = f"news_{self.timestamp}.json"
@@ -76,11 +81,13 @@ class Exporter:
                 indent=4,
             )
 
+        return filepath
+
     def export_excel(self, articles, filename=None):
         """Export articles to Excel."""
 
         if not articles:
-            return
+            return None
 
         if filename is None:
             filename = f"news_{self.timestamp}.xlsx"
@@ -98,15 +105,30 @@ class Exporter:
             ])
 
         filepath = self.output_dir / filename
-
         workbook.save(filepath)
 
+        return filepath
+
     def export_all(self, articles):
-        """Export to all supported formats."""
+        """Export to all supported formats.
+
+        Returns
+        -------
+        list[str]
+            Daftar file yang berhasil dibuat.
+        """
 
         if not articles:
-            return
+            return []
 
-        self.export_csv(articles)
-        self.export_json(articles)
-        self.export_excel(articles)
+        exported_files = []
+
+        for filepath in (
+            self.export_csv(articles),
+            self.export_json(articles),
+            self.export_excel(articles),
+        ):
+            if filepath is not None:
+                exported_files.append(str(filepath))
+
+        return exported_files

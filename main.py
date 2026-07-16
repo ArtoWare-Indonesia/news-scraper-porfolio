@@ -19,11 +19,10 @@ def main(selected=None):
         Jika None, semua scraper dijalankan.
     """
     start_time = time.perf_counter()
-    
-    logger.info("=" * 50)
-    logger.info("%s v%s", APP_NAME, APP_VERSION)
-    logger.info("=" * 50)
 
+    logger.info("=" * 60)
+    logger.info("%s v%s", APP_NAME, APP_VERSION)
+    logger.info("=" * 60)
     logger.info("Starting news scraping...")
 
     manager = ScraperManager()
@@ -32,57 +31,64 @@ def main(selected=None):
         selected=selected
     )
 
-    if not all_articles:
-        logger.warning("No articles collected.")
-        return
+    exported_files = []
 
-    exporter = Exporter()
-    exporter.export_all(all_articles)
+    if all_articles:
+        exporter = Exporter()
+        exported_files = exporter.export_all(all_articles)
+    else:
+        logger.warning("No articles collected.")
 
     elapsed = time.perf_counter() - start_time
 
-    logger.info("")
-    logger.info("=" * 50)
-    logger.info("SCRAPING SUMMARY")
-    logger.info("=" * 50)
+    successful_sources = (
+        len(source_counts) - len(failed_sources)
+    )
 
-    logger.info("Sources")
+    logger.info("")
+    logger.info("=" * 60)
+    logger.info("SCRAPING SUMMARY")
+    logger.info("=" * 60)
+
+    logger.info("Version          : %s", APP_VERSION)
+    logger.info("Successful       : %d", successful_sources)
+    logger.info("Failed           : %d", len(failed_sources))
+    logger.info("Total articles   : %d", len(all_articles))
+
+    logger.info("")
+    logger.info("Articles by source")
 
     for source, count in source_counts.items():
         logger.info(
-            "  • %-10s : %d article(s)",
+            "  %-15s : %d article(s)",
             source,
-            count
+            count,
         )
-
-    logger.info("-" * 50)
 
     if failed_sources:
+        logger.info("")
         logger.warning(
-            "Failed scraper(s): %s",
-            ", ".join(failed_sources)
+            "Failed source(s): %s",
+            ", ".join(failed_sources),
         )
-    else:
-        logger.info("Failed scraper(s): None")
 
+    logger.info("")
+    logger.info("Exported files")
+
+    if exported_files:
+        for filepath in exported_files:
+            logger.info("  - %s", filepath)
+    else:
+        logger.info("  None")
+
+    logger.info("")
     logger.info(
-        "Total articles : %d",
-        len(all_articles)
+        "Elapsed time     : %.2f seconds",
+        elapsed,
     )
-    logger.info(
-        "Export formats : CSV, JSON, Excel"
-    )
-    logger.info(
-        "Output folder  : output/"
-    )
-    logger.info(
-        "Elapsed time   : %.2f seconds",
-        elapsed
-    )
-    logger.info("=" * 50)
-    logger.info(
-        "Scraping completed successfully!"
-    )
+
+    logger.info("=" * 60)
+    logger.info("Scraping completed successfully!")
 
 
 if __name__ == "__main__":
