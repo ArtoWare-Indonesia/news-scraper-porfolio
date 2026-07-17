@@ -1,7 +1,7 @@
 # News Scraper Portfolio
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
-![Version](https://img.shields.io/badge/version-v0.3.0-green)
+![Version](https://img.shields.io/badge/version-v0.4.0-green)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
@@ -26,6 +26,10 @@ The project demonstrates how to build reusable, maintainable, and extensible web
 - Logging
 - Lightweight (no pandas dependency)
 - Compatible with Windows and Linux (antiX)
+- Improved logging
+- Execution time measurement
+- Scraping summary
+- Exported file reporting
 
 ---
 
@@ -78,7 +82,7 @@ The RSS scraping engine from v0.2.x is still available in the project and will b
 ## Project Structure
 
 ```
-news-scraper-porfolio/
+news-scraper-portfolio/
 │
 ├── config.py
 ├── main.py
@@ -158,8 +162,38 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 ## 💻 Running the Project
+============================================================
+News Scraper Portfolio v0.5.0
+============================================================
 
-![Terminal Demo](docs/images/terminal-demo.png)
+Starting news scraping...
+
+Running AntaraScraper (Antara)
+[SUCCESS] Antara collected 15 article(s) in 1.18 seconds
+
+Running TempoScraper (Tempo)
+[SUCCESS] Tempo collected 20 article(s) in 0.92 seconds
+
+============================================================
+SCRAPING SUMMARY
+============================================================
+Version          : 0.5.0
+Successful       : 2
+Failed           : 0
+Total articles   : 35
+
+Articles by source
+  Antara         : 15
+  Tempo          : 20
+
+Exported files
+  output/news_20260716_101530.csv
+  output/news_20260716_101530.json
+  output/news_20260716_101530.xlsx
+
+Elapsed time     : 2.10 seconds
+============================================================
+
 ---
 
 ## Usage
@@ -202,9 +236,10 @@ Generated files are stored in the `output/` directory.
 
 ```
 output/
-├── news.csv
-├── news.json
-└── news.xlsx
+├── news_20260716_101530.csv
+├── news_20260716_101530.json
+└── news_20260716_101530.xlsx
+
 ```
 
 ---
@@ -250,34 +285,25 @@ This project follows several software engineering principles:
 
 ## Roadmap
 
-### v0.4.0
-
-- RSS + HTML integration
-- Unified scraper manager
-- Configurable scraper selection
-
 ### v0.5.0
-
-- Pagination support
-- Duplicate detection
-- Multiple category scraping
+- Improved logging
+- Documentation
+- Initial unit tests
+- CLI (--source, --format, --limit)
 
 ### v0.6.0
-
-- Detail article scraping
-- Author
-- Full content
-- Published date
-- Tags
-- High-resolution images
+- Kompas scraper
+- CNBC Indonesia scraper
+- Detik scraper
+- Parallel scraping
+- YAML/JSON configuration
+- Date/category filtering
 
 ### v1.0.0
-
-- Command Line Interface (CLI)
-- Unit tests
-- GitHub Actions
-- Documentation
+- Stable API
 - Plugin-based scraper system
+- GitHub Actions
+- Complete documentation
 
 ---
 
