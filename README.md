@@ -1,13 +1,28 @@
 # News Scraper Portfolio
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
-![Version](https://img.shields.io/badge/version-v0.4.0-green)
+![Version](https://img.shields.io/badge/version-v0.5.0-green)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 A modular Python news scraper framework built as a freelance portfolio project.
 
 The project demonstrates how to build reusable, maintainable, and extensible web scrapers using modern Python architecture. Currently it supports HTML news scraping with a reusable scraping framework and standardized data model.
+
+---
+
+## Current Release
+
+**Latest Version:** **v0.5.0**
+
+### Highlights
+
+- Improved logging
+- Execution time measurement
+- Better scraping summary
+- Exported file reporting
+- Updated documentation
+- Initial pytest test suite
 
 ---
 
@@ -19,17 +34,13 @@ The project demonstrates how to build reusable, maintainable, and extensible web
 - BeautifulSoup HTML parsing
 - Centralized `ScraperManager`
 - Standardized `NewsItem` data model
-- CSV export
-- Excel export (.xlsx)
-- JSON export
+- CSV, JSON and Excel export
 - Configurable scraper registry
-- Logging
+- Improved logging and execution timing
+- Scraping summary with exported file reporting
+- Initial unit tests with `pytest`
 - Lightweight (no pandas dependency)
-- Compatible with Windows and Linux (antiX)
-- Improved logging
-- Execution time measurement
-- Scraping summary
-- Exported file reporting
+- Compatible with Windows and Linux
 
 ---
 
@@ -86,19 +97,24 @@ news-scraper-portfolio/
 │
 ├── config.py
 ├── main.py
+├── pytest.ini
 ├── requirements.txt
 │
 ├── models/
 │   ├── __init__.py
 │   └── news.py
 │
-├── scrapers/
+├── scrapers/ 
 │   ├── __init__.py
 │   ├── base.py
 │   ├── manager.py
-│   ├── antara.py
-│   └── tempo.py
-│
+│   ├── registry.py
+│   ├── rss.py
+|   └── html/
+|       ├── __init__.py
+|       ├── antara.py
+|       └── tempo.py
+|
 ├── utils/
 │   ├── exporter.py
 │   └── logger.py
@@ -107,18 +123,19 @@ news-scraper-portfolio/
 │   └── images/
 │       ├── news.csv.png
 │       ├── news.xlsx.png
-│       └── news.json.png
+│       ├── news.json.png
+|       └── terminal-demo.gif
 │
 ├── output/
 │   ├── news.csv
 │   ├── news.xlsx
 │   └── news.json
 │
-├── test_antara.py
-├── test_tempo.py
-├── test_manager.py
-└── test_newsitem.py
-```
+├── tests/
+    ├── __init__.py
+    ├── test_exporter.py
+    ├── test_manager.py
+    └── test_newsitem.py
 
 ---
 
@@ -153,7 +170,7 @@ Main dependencies:
 ```bash
 git clone <repository-url>
 
-cd news-scraper-porfolio
+cd news-scraper-portfolio
 
 python3 -m venv .venv
 
@@ -193,41 +210,21 @@ Exported files
 
 Elapsed time     : 2.10 seconds
 ============================================================
+Scraping completed successfully!
 
 ---
 
-## Usage
-
-Run all registered scrapers:
-
-```bash
-python main.py
-```
-
-Example output:
-
-```
-Starting news scraping...
-
-Running AntaraScraper
-Running TempoScraper
-
-Scraping completed successfully!
-
-Total articles: 108
-
-Files saved in output/
-```
 ## 📸 Output Preview
 
 ### CSV Output
-![CSV Output](docs/images/output-csv.png)
+![CSV Output](docs/images/output.csv.png)
 
 ### Excel Output
-![Excel Output](docs/images/output-excel.png)
+![Excel Output](docs/images/output.excel.png)
 
 ### JSON Output
-![JSON Output](docs/images/output-json.png)
+![JSON Output](docs/images/output.json.png)
+
 ---
 
 ## Output
@@ -249,23 +246,7 @@ output/
 Run individual scraper tests:
 
 ```bash
-python test_antara.py
-```
-
-```bash
-python test_tempo.py
-```
-
-Run all scrapers:
-
-```bash
-python test_manager.py
-```
-
-Test the data model:
-
-```bash
-python test_newsitem.py
+pytest
 ```
 
 ---
@@ -285,13 +266,14 @@ This project follows several software engineering principles:
 
 ## Roadmap
 
-### v0.5.0
+### ✅ v0.5.0
 - Improved logging
-- Documentation
-- Initial unit tests
-- CLI (--source, --format, --limit)
+- Better scraping summary
+- Documentation improvements
+- Initial unit tests using pytest
 
-### v0.6.0
+### 🚧 v0.6.0
+- CLI (`--source`, `--format`, `--limit`)
 - Kompas scraper
 - CNBC Indonesia scraper
 - Detik scraper
@@ -299,7 +281,7 @@ This project follows several software engineering principles:
 - YAML/JSON configuration
 - Date/category filtering
 
-### v1.0.0
+### 🎯 v1.0.0
 - Stable API
 - Plugin-based scraper system
 - GitHub Actions
