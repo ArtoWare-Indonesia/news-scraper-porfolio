@@ -2,22 +2,25 @@ import time
 
 from config import APP_NAME, APP_VERSION
 from scrapers.manager import ScraperManager
+from utils.cli import parse_args
 from utils.exporter import Exporter
 from utils.logger import setup_logger
 
 logger = setup_logger()
 
 
-def main(selected=None):
+def main():
     """
-    Menjalankan proses scraping.
+    Menjalankan proses scraping melalui Command Line Interface.
+    """
+    args = parse_args()
 
-    Parameters
-    ----------
-    selected : list[str] | None
-        Daftar scraper yang akan dijalankan.
-        Jika None, semua scraper dijalankan.
-    """
+    selected = [args.source] if args.source else None
+
+    logger.info("Source : %s", args.source)
+    logger.info("Format : %s", args.format)
+    logger.info("Limit  : %s", args.limit)
+
     start_time = time.perf_counter()
 
     logger.info("=" * 60)
@@ -31,29 +34,34 @@ def main(selected=None):
         selected=selected
     )
 
+    if args.limit is not None:
+        logger.info(
+            "Limiting export to %d article(s).",
+            args.limit,
+        )
+        all_articles = all_articles[:args.limit]
+
     exported_files = []
 
     if all_articles:
         exporter = Exporter()
-        exported_files = exporter.export_all(all_articles)
+        exported_files = exporter.export_all(all_articles, export_format=args.format,)
     else:
         logger.warning("No articles collected.")
 
     elapsed = time.perf_counter() - start_time
 
-    successful_sources = (
-        len(source_counts) - len(failed_sources)
-    )
+    successful_sources = len(source_counts) - len(failed_sources)
 
     logger.info("")
     logger.info("=" * 60)
     logger.info("SCRAPING SUMMARY")
     logger.info("=" * 60)
 
-    logger.info("Version          : %s", APP_VERSION)
-    logger.info("Successful       : %d", successful_sources)
-    logger.info("Failed           : %d", len(failed_sources))
-    logger.info("Total articles   : %d", len(all_articles))
+    logger.info("Version           : %s", APP_VERSION)
+    logger.info("Successful        : %d", successful_sources)
+    logger.info("Failed            : %d", len(failed_sources))
+    logger.info("Exported articles : %d", len(all_articles))
 
     logger.info("")
     logger.info("Articles by source")
@@ -83,7 +91,7 @@ def main(selected=None):
 
     logger.info("")
     logger.info(
-        "Elapsed time     : %.2f seconds",
+        "Elapsed time      : %.2f seconds",
         elapsed,
     )
 

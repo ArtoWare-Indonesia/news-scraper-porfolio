@@ -1,5 +1,5 @@
 APP_NAME = "News Scraper Portfolio"
-APP_VERSION = "0.4.0"
+APP_VERSION = "0.6.0"
 
 HEADERS = {
     "User-Agent": (

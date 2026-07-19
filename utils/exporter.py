@@ -109,8 +109,21 @@ class Exporter:
 
         return filepath
 
-    def export_all(self, articles):
-        """Export to all supported formats.
+    def export_all(
+        self,
+        articles,
+        export_format="all",
+    ):
+        """
+        Export articles ke format yang dipilih.
+
+        Parameters
+        ----------
+        articles : list
+            Daftar artikel.
+
+        export_format : str
+            csv, json, xlsx, atau all.
 
         Returns
         -------
@@ -123,11 +136,18 @@ class Exporter:
 
         exported_files = []
 
-        for filepath in (
-            self.export_csv(articles),
-            self.export_json(articles),
-            self.export_excel(articles),
-        ):
+        if export_format in ("csv", "all"):
+            filepath = self.export_csv(articles)
+            if filepath is not None:
+                exported_files.append(str(filepath))
+
+        if export_format in ("json", "all"):
+            filepath = self.export_json(articles)
+            if filepath is not None:
+                exported_files.append(str(filepath))
+
+        if export_format in ("xlsx", "all"):
+            filepath = self.export_excel(articles)
             if filepath is not None:
                 exported_files.append(str(filepath))
 
