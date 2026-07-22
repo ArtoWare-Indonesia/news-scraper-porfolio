@@ -1,7 +1,7 @@
 # News Scraper Portfolio
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
-![Version](https://img.shields.io/badge/version-v0.5.0-green)
+![Version](https://img.shields.io/badge/version-v0.6.0-green)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
@@ -13,17 +13,17 @@ The project demonstrates how to build reusable, maintainable, and extensible web
 
 ## Current Release
 
-**Latest Version:** **v0.5.0**
+**Latest Version:** **v0.6.0**
 
-### Highlights
+### Command Line Interface
 
-- Improved logging
-- Execution time measurement
-- Better scraping summary
-- Exported file reporting
-- Updated documentation
-- Initial pytest test suite
-
+```bash
+python main.py --help
+python main.py --source antara
+python main.py --limit 10
+python main.py --format json
+python main.py --source tempo --limit 5 --format csv
+```
 ---
 
 ## Features
@@ -41,6 +41,13 @@ The project demonstrates how to build reusable, maintainable, and extensible web
 - Initial unit tests with `pytest`
 - Lightweight (no pandas dependency)
 - Compatible with Windows and Linux
+
+### ✨ New Features
+
+- Added `--source` option to run a specific scraper.
+- Added `--limit` option to limit exported articles.
+- Added `--format` option to export CSV, JSON, XLSX, or all formats.
+- Improved CLI help and argument handling with argparse.
 
 ---
 
@@ -116,7 +123,8 @@ news-scraper-portfolio/
 |       └── tempo.py
 |
 ├── utils/
-│   ├── exporter.py
+│   ├── cli.py
+|   ├── exporter.py
 │   └── logger.py
 │
 ├── docs/
@@ -179,36 +187,37 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 ## 💻 Running the Project
+Source : antara
+Format : json
+Limit  : 10
+
 ============================================================
-News Scraper Portfolio v0.5.0
+News Scraper Portfolio v0.6.0
 ============================================================
 
 Starting news scraping...
 
+Running 1 scraper(s)...
 Running AntaraScraper (Antara)
 [SUCCESS] Antara collected 15 article(s) in 1.18 seconds
-
-Running TempoScraper (Tempo)
-[SUCCESS] Tempo collected 20 article(s) in 0.92 seconds
+Finished. Total articles collected: 15
+Limiting export to 10 article(s).
 
 ============================================================
 SCRAPING SUMMARY
 ============================================================
-Version          : 0.5.0
-Successful       : 2
+Version          : 0.6.0
+Successful       : 1
 Failed           : 0
-Total articles   : 35
+Exported articles   : 10
 
 Articles by source
-  Antara         : 15
-  Tempo          : 20
+  Antara         : 10  article(s)
 
 Exported files
-  output/news_20260716_101530.csv
   output/news_20260716_101530.json
-  output/news_20260716_101530.xlsx
 
-Elapsed time     : 2.10 seconds
+Elapsed time     : 0.54 seconds
 ============================================================
 Scraping completed successfully!
 
@@ -266,14 +275,10 @@ This project follows several software engineering principles:
 
 ## Roadmap
 
-### ✅ v0.5.0
-- Improved logging
-- Better scraping summary
-- Documentation improvements
-- Initial unit tests using pytest
-
-### 🚧 v0.6.0
+### ✅ v0.6.0
 - CLI (`--source`, `--format`, `--limit`)
+
+### v0.7.0
 - Kompas scraper
 - CNBC Indonesia scraper
 - Detik scraper
